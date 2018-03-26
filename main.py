@@ -1,5 +1,8 @@
 import pygame
 import sys
+import os
+import csv
+import datetime
 
 def main():
     pygame.init()
@@ -29,6 +32,7 @@ def main():
     input_box = pygame.Rect(100, 100, 140, 32)
     button_submit = pygame.Rect(200,150,100,50)
     input_active=False
+    filename='data.csv'
 	
     while True:
         for event in pygame.event.get():
@@ -63,7 +67,14 @@ def main():
 						
                     if button_submit.collidepoint(mouse_pos):
                         print('')
-						#write_csv('data.csv', text, datetime.datetime.now())
+                        file_exists = os.path.isfile(filename)
+		
+                        with open (filename,'a') as csvfile:
+                            fieldnames = ['Time', 'Glucose']
+                            writer = csv.DictWriter(csvfile,delimiter=',',lineterminator='\n' ,fieldnames=fieldnames)
+                            if not file_exists:
+                                writer.writeheader()
+                            writer.writerow({'Time': datetime.datetime.now(), 'Glucose': text})
 						
             if event.type == pygame.KEYDOWN:
                 if input_active:
